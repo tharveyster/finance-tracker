@@ -2,7 +2,41 @@
 [![ISC License badge](https://img.shields.io/github/license/tharveyster/tech-blog?style=plastic)](https://opensource.org/licenses/ISC)
 
 ## Description
-This project is a finance tracker that allows users to create user accounts, create, update, and delete financial accounts. It currently only handles credit cards, but I will be adding mortgages, car loans, and personal/misc loans. It was created using HTML, CSS, JavaScript, Node.js, Express.js, Handlebars.js, MySQL, BCrypt, Sequelize, and Sequelize Session.
+This project is a finance tracker that allows users to create user accounts, and create, update, and delete financial accounts. It currently only handles credit cards. It does not keep track of account numbers, just credit limits, current balances, available credit, and percentage of use. It was created using HTML, CSS, JavaScript, Node.js, Express.js, Handlebars.js, MySQL, BCrypt, Sequelize, and Sequelize Session.
+
+## Future Development
+I plan to add the capability to track mortgages, car loans, and personal/misc loans.
+
+## Installation
+Clone this repository, go to the repository folder in the terminal, and then run the following command
+
+```
+npm i
+```
+
+You must have MySQL installed, log into the MySQL command line client, and run
+
+```
+source db/schema.sql;
+```
+
+In addition, a .env file must be created in the root of the project containing the following code:
+
+```
+DB_NAME='finance_db'
+DB_USER='username'
+DB_PASSWORD='password'
+```
+
+Change username and password to your MySQL username and password.
+
+Start the app in the terminal using
+
+```
+node server.js
+```
+
+and open a browser window and go to http://localhost:3001/
 
 ## Questions
 If you have questions about this repo, open an issue or contact me directly at todd@theharveysplace.com. You can find more of my work at [tharveyster](https://github.com/tharveyster).
