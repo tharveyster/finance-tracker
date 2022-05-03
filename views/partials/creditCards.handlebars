@@ -1,0 +1,26 @@
+  <!-- Show accounts if any exist, or show 'no account' message if there are none -->
+  {{#if accounts}}
+  <h3>Credit Card Accounts</h3>
+  <table class="gridTable">
+    <tr>
+      <th class="gridCell">Account Name</th>
+      <th class="gridCell">Credit Limit</th>
+      <th class="gridCell">Current Balance</th>
+      <th class="gridCell">Available Credit</th>
+      <th class="gridCell">Percent Used</th>
+    </tr>
+    <!-- Loop over each object in the accounts array -->
+    {{#each accounts as |account| }}
+      {{> grid}}
+    {{/each}}
+    <tr>
+      <th>Totals</th>
+      <th class="gridCell gridCurrency">${{totalLimit}}</th>
+      <th class="gridCell gridCurrency">${{totalBalance}}</th>
+      <th class="gridCell gridCurrency">${{totalAvailable}}</th>
+      <th class="gridCell gridPercent">{{totalUsed}}%</th>
+    </tr>
+  </table>
+  {{else}}
+    No accounts available. Go to the accounts page and click the "Add Account" button to add one.
+  {{/if}}

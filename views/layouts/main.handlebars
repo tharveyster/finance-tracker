@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Finance Tracker</title>
+    <link rel="stylesheet" href="/css/jass.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+
+  <body>
+    <div>
+      <header>
+        <nav>
+          <button class="no-button" id="home"><a href="/">Home</a></button>
+          <button class="no-button" id="accounts"><a
+              href="/accounts"
+            >Accounts</a></button>
+          <!-- Conditionally render login or logout links -->
+          {{#if logged_in}}
+            <button class="no-button" id="logout"><a
+                href="/logout"
+              >Logout</a></button>
+          {{else}}
+            <button class="no-button" id="login"><a
+                href="/login"
+              >Login</a></button>
+          {{/if}}
+        </nav>
+        <h1 style="color:#fff">
+          Finance Tracker
+        </h1>
+      </header>
+      <main class="container container-fluid mt-5">
+        <!-- Render the sub layout -->
+        {{{body}}}
+      </main>
+      <footer>
+
+      </footer>
+    </div>
+
+    <!-- Render script for logged in users only -->
+    {{#if logged_in}}
+      <script src="/js/logout.js"></script>
+    {{/if}}
+  </body>
+
+</html>
