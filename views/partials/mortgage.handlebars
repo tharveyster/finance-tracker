@@ -1,0 +1,31 @@
+<!-- Show mortgages if any exist, or show 'no mortgage' message if there are none -->
+  {{#if mortgages}}
+  <h3>Mortgage Accounts</h3>
+  <table class="gridTable">
+    <tr>
+      <th class="gridCell">Account Name</th>
+      <th class="gridCell">Principal Amount</th>
+      <th class="gridCell">Annual Interest Rate</th>
+      <th class="gridCell">Loan Term in Years</th>
+      <th class="gridCell">Monthly Payment</th>
+      <th class="gridCell">Current Balance</th>
+      <th class="gridCell">Percent Remaining</th>
+    </tr>
+    <!-- Loop over each object in the accounts array -->
+    {{#each mortgages as |mortgage| }}
+      {{> mortgageGrid}}
+    {{/each}}
+    <tr>
+      <th>Totals / Averages</th>
+      <th class="gridCell gridCurrency">${{totalMortgageAmount}}</th>
+      <th class="gridCell">{{totalMortgageAverageInterest}}%</th>
+      <th class="gridCell">{{totalMortgageAverageYears}}</th>
+      <th class="gridCell gridCurrency">${{totalMortgagePayments}}</th>
+      <th class="gridCell gridCurrency">${{totalMortgageBalance}}</th>
+      <th class="gridCell gridPercent">{{totalPercentMortgageRemaining}}%</th>
+    </tr>
+  </table>
+  {{else}}
+    <h3>Mortgage Accounts</h3>
+    No mortgages available. Go to the accounts page and click the "Add Mortgage" button to add one.
+  {{/if}}

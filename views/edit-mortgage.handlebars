@@ -1,0 +1,27 @@
+<!-- Edit mortgage card -->
+<div class="accountCard">
+  <div class="accountCardHeader">
+    <div class="accountCardTitle">Edit Mortgage</div>
+  </div>
+  <div class="accountCardBody">
+    <form id="viewMortgage" class="comment-form">
+    <p>Title</p>
+    <input id="viewMortgageTitle" class="form-control" value="{{title}}" />
+    <p>Principal Amount</p>
+    <input id="viewMortgageLoanAmount" class="form-control" value="{{loan_amount}}" />
+    <p>Annual Interest Rate</p>
+    <input id="viewMortgageAnnualInterestRate" class="form-control" value="{{annual_interest_rate}}" />
+    <p>Loan Term in Years</p>
+    <input id="viewMortgageYears" class="form-control" value="{{years}}" />
+    <p>Current Balance</p>
+    <input id="viewMortgageBalance" class="form-control" value="{{balance}}" />
+    <p class="centered">
+      <button id="updateMortgageBtn" class="btn btn-primary">Update Mortgage</button>
+      <button id="deleteMortgageBtn" class="btn btn-primary">Delete</button>
+    </p>
+    </form>
+  </div>
+</div>
+
+<script src="../js/updateMortgage.js"></script>
+<script src="../js/deleteMortgage.js"></script>

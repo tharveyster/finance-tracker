@@ -1,10 +1,42 @@
 const router = require('express').Router();
-const { User, Account } = require('../models');
+const { User, Account, Mortgage } = require('../models');
 const withAuth = require('../utils/auth');
 
 // Get all accounts
 router.get('/', async (req, res) => {
   try {
+    const mortgageData = await Mortgage.findAll({
+      include: [
+        {
+          model: User,
+          attributes: ['username'],
+        },
+      ],
+    });
+
+    const mortgages = mortgageData.map((mortgage) => mortgage.get({ plain: true }));
+
+    let totalMortgageAmount = 0;
+    let totalMortgageAverageInterest = 0;
+    let totalMortgageAverageYears = 0;
+    let totalMortgagePayments = 0;
+    let totalMortgageBalance = 0;
+    let totalPercentMortgageRemaining = 0;
+    for (let i = 0; i < mortgages.length; i++) {
+      totalMortgageAmount += parseFloat(mortgages[i].loan_amount);
+      totalMortgageAverageInterest += parseFloat(mortgages[i].annual_interest_rate);
+      totalMortgageAverageYears += parseFloat(mortgages[i].years);
+      totalMortgagePayments += parseFloat(mortgages[i].payment);
+      totalMortgageBalance += parseFloat(mortgages[i].balance);
+      totalPercentMortgageRemaining += parseFloat(mortgages[i].remaining);
+    }
+    totalMortgageAmount = totalMortgageAmount.toFixed(2);
+    totalMortgageAverageInterest = (totalMortgageAverageInterest / mortgages.length).toFixed(2);
+    totalMortgageAverageYears = (totalMortgageAverageYears / mortgages.length).toFixed(2);
+    totalMortgagePayments = totalMortgagePayments.toFixed(2);
+    totalMortgageBalance = totalMortgageBalance.toFixed(2);
+    totalPercentMortgageRemaining = (totalPercentMortgageRemaining / mortgages.length).toFixed(2);
+
     const accountData = await Account.findAll({
       order: [['balance', 'ASC'], ['limit', 'DESC']],
       include: [
@@ -16,6 +48,7 @@ router.get('/', async (req, res) => {
     });
 
     const accounts = accountData.map((account) => account.get({ plain: true }));
+
     let totalLimit = 0;
     let totalBalance = 0;
     let totalAvailable = 0;
@@ -31,7 +64,14 @@ router.get('/', async (req, res) => {
     totalUsed = ((totalBalance / totalLimit) * 100).toFixed(2);
 
     res.render('homepage', { 
+      mortgages,
       accounts,
+      totalMortgageAmount,
+      totalMortgageAverageInterest,
+      totalMortgageAverageYears,
+      totalMortgagePayments,
+      totalMortgageBalance,
+      totalPercentMortgageRemaining,
       totalLimit,
       totalBalance,
       totalAvailable,
@@ -39,9 +79,38 @@ router.get('/', async (req, res) => {
       logged_in: req.session.logged_in 
     });
   } catch (err) {
+    console.log(err);
     res.status(500).json(err);
   }
 })
+
+// Get mortgage by id
+router.get('/mortgage/:id', async (req, res) => {
+  try {
+    const mortgageData = await Mortgage.findByPk(req.params.id, {
+      include: [
+        {
+          model: User,
+          attributes: ['username'],
+        },
+      ],
+    });
+
+    if (!mortgageData) {
+      res.render('404');
+      return;
+    }
+
+    const mortgage = mortgageData.get({ plain: true });
+
+    res.render('mortgage', {
+      ...mortgage,
+      logged_in: req.session.logged_in
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 
 // Get account by id
 router.get('/account/:id', async (req, res) => {
@@ -67,6 +136,26 @@ router.get('/account/:id', async (req, res) => {
       logged_in: req.session.logged_in
     });
   } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+// Get mortgage page by user_id
+router.get('/mortgages', withAuth, async (req, res) => {
+  try {
+    const userData = await User.findByPk(req.session.user_id, {
+      attributes: { exclude: ['password'] },
+      include: [{ model: Mortgage }],
+    });
+
+    const user = userData.get({ plain: true });
+
+    res.render('mortgages', {
+      ...user,
+      logged_in: true
+    });
+  } catch (err) {
+    console.log(err);
     res.status(500).json(err);
   }
 });
@@ -110,9 +199,49 @@ router.get('/signup', (req, res) => {
   res.render('signup');
 })
 
+// New mortgage creation page
+router.get('/add-mortgage', (req, res) => {
+  res.render('add-mortgage');
+});
+
 // New account creation page
 router.get('/add-account', (req, res) => {
   res.render('add-account');
+});
+
+// Edit mortgage page
+router.get('/edit-mortgage/:id', async (req, res) => {
+  try {
+    const editMortgageData = await Mortgage.findByPk(req.params.id, {
+      attributes: [
+        'id',
+        'title',
+        'loan_amount',
+        'annual_interest_rate',
+        'years',
+        'balance',
+        'remaining'
+      ],
+      include: [{
+        model: User,
+        attributes: ['username']
+      }]
+    });
+
+    if (!editMortgageData) {
+      res.render('404');
+      return;
+    }
+
+    const mortgage = editMortgageData.get({ plain: true });
+
+    res.render('edit-mortgage', {
+      ...mortgage,
+      logged_in: req.session.logged_in
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 // Edit account page
