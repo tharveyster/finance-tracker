@@ -143,7 +143,7 @@ textarea {
 }
 
 .gridTable {
-  border: 3px double #000;
+  border: 3px solid #000;
   border-collapse: collapse;
   width: 100%;
 }

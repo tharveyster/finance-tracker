@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { User, Account, Mortgage, Car } = require('../models');
+const { User, Account, Mortgage, Car, Loan } = require('../models');
 const withAuth = require('../utils/auth');
 
 // Get all accounts
@@ -75,6 +75,41 @@ router.get('/', withAuth, async (req, res) => {
     totalCarBalance = totalCarBalance.toFixed(2);
     totalPercentCarRemaining = (totalPercentCarRemaining / cars.length).toFixed(2);
 
+    const loanData = await Loan.findAll({
+      where: {
+        user_id: req.session.user_id,
+      },
+      include: [
+        {
+          model: User,
+          attributes: ['username'],
+        },
+      ],
+    });
+
+    const loans = loanData.map((loan) => loan.get({ plain: true }));
+
+    let totalLoanAmount = 0;
+    let totalLoanAverageInterest = 0;
+    let totalLoanAverageMonths = 0;
+    let totalLoanPayments = 0;
+    let totalLoanBalance = 0;
+    let totalPercentLoanRemaining = 0;
+    for (let i = 0; i < loans.length; i++) {
+      totalLoanAmount += parseFloat(loans[i].loan_amount);
+      totalLoanAverageInterest += parseFloat(loans[i].annual_interest_rate);
+      totalLoanAverageMonths += parseFloat(loans[i].months);
+      totalLoanPayments += parseFloat(loans[i].payment);
+      totalLoanBalance += parseFloat(loans[i].balance);
+      totalPercentLoanRemaining += parseFloat(loans[i].remaining);
+    }
+    totalLoanAmount = totalLoanAmount.toFixed(2);
+    totalLoanAverageInterest = (totalLoanAverageInterest / loans.length).toFixed(2);
+    totalLoanAverageMonths = (totalLoanAverageMonths / loans.length).toFixed(2);
+    totalLoanPayments = totalLoanPayments.toFixed(2);
+    totalLoanBalance = totalLoanBalance.toFixed(2);
+    totalPercentLoanRemaining = (totalPercentLoanRemaining / loans.length).toFixed(2);
+
     const accountData = await Account.findAll({
       where: {
         user_id: req.session.user_id,
@@ -107,6 +142,7 @@ router.get('/', withAuth, async (req, res) => {
     res.render('homepage', { 
       mortgages,
       cars,
+      loans,
       accounts,
       totalMortgageAmount,
       totalMortgageAverageInterest,
@@ -120,6 +156,12 @@ router.get('/', withAuth, async (req, res) => {
       totalCarPayments,
       totalCarBalance,
       totalPercentCarRemaining,
+      totalLoanAmount,
+      totalLoanAverageInterest,
+      totalLoanAverageMonths,
+      totalLoanPayments,
+      totalLoanBalance,
+      totalPercentLoanRemaining,
       totalLimit,
       totalBalance,
       totalAvailable,
@@ -181,6 +223,34 @@ router.get('/car/:id', async (req, res) => {
 
     res.render('car', {
       ...car,
+      logged_in: req.session.logged_in
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+// Get miscellaneous loan by id
+router.get('/loan/:id', async (req, res) => {
+  try {
+    const loanData = await Loan.findByPk(req.params.id, {
+      include: [
+        {
+          model: User,
+          attributes: ['username'],
+        },
+      ],
+    });
+
+    if (!loanData) {
+      res.render('404');
+      return;
+    }
+
+    const loan = loanData.get({ plain: true });
+
+    res.render('loan', {
+      ...loan,
       logged_in: req.session.logged_in
     });
   } catch (err) {
@@ -256,6 +326,26 @@ router.get('/cars', withAuth, async (req, res) => {
   }
 });
 
+// Get miscellaneous loan page by user_id
+router.get('/loans', withAuth, async (req, res) => {
+  try {
+    const userData = await User.findByPk(req.session.user_id, {
+      attributes: { exclude: ['password'] },
+      include: [{ model: Loan }],
+    });
+
+    const user = userData.get({ plain: true });
+
+    res.render('loans', {
+      ...user,
+      logged_in: true
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
 // Get accounts page by user id
 router.get('/accounts', withAuth, async (req, res) => {
   try {
@@ -303,6 +393,11 @@ router.get('/add-mortgage', (req, res) => {
 // New car loan creation page
 router.get('/add-car', (req, res) => {
   res.render('add-car');
+});
+
+// New miscellaneous loan creation page
+router.get('/add-loan', (req, res) => {
+  res.render('add-loan');
 });
 
 // New account creation page
@@ -405,6 +500,41 @@ router.get('/edit-account/:id', async (req, res) => {
 
     res.render('edit-account', {
       ...account,
+      logged_in: req.session.logged_in
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+// Edit miscellaneous loan page
+router.get('/edit-loan/:id', async (req, res) => {
+  try {
+    const editLoanData = await Loan.findByPk(req.params.id, {
+      attributes: [
+        'id',
+        'title',
+        'loan_amount',
+        'annual_interest_rate',
+        'months',
+        'balance',
+        'remaining'
+      ],
+      include: [{
+        model: User,
+        attributes: ['username']
+      }]
+    });
+
+    if (!editLoanData) {
+      res.render('404');
+      return;
+    }
+
+    const loan = editLoanData.get({ plain: true });
+
+    res.render('edit-loan', {
+      ...loan,
       logged_in: req.session.logged_in
     });
   } catch (err) {

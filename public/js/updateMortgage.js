@@ -6,7 +6,12 @@ const updateFormHandler = async (event) => {
   const loan_amount = document.querySelector('#viewMortgageLoanAmount').value.trim();
   const annual_interest_rate = document.querySelector('#viewMortgageAnnualInterestRate').value.trim();
   const years = document.querySelector('#viewMortgageYears').value.trim();
-  const payment = (loan_amount * (annual_interest_rate / 1200)) / (1 - (Math.pow((1 + (annual_interest_rate / 1200)) , (12 * years) * -1)));
+  let payment = 0;
+  if (annual_interest_rate > 0) {
+    payment = (loan_amount * (annual_interest_rate / 1200)) / (1 - (Math.pow((1 + (annual_interest_rate / 1200)) , (12 * years) * -1)));
+  } else {
+    payment = (loan_amount / (12 * years));
+  }
   const balance = document.querySelector('#viewMortgageBalance').value.trim();
   const remaining = (balance / loan_amount) * 100;
 

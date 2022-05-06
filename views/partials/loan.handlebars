@@ -1,0 +1,31 @@
+<!-- Show miscellaneous loans if any exist, or show 'no miscellaneous loans' message if there are none -->
+  {{#if loans}}
+  <h3>Miscellaneous Loan Accounts</h3>
+  <table class="gridTable">
+    <tr>
+      <th class="gridCell">Account Name</th>
+      <th class="gridCell">Principal Amount</th>
+      <th class="gridCell">Annual Interest Rate</th>
+      <th class="gridCell">Loan Term in Months</th>
+      <th class="gridCell">Monthly Payment</th>
+      <th class="gridCell">Current Balance</th>
+      <th class="gridCell">Percent Remaining</th>
+    </tr>
+    <!-- Loop over each object in the accounts array -->
+    {{#each loans as |loan| }}
+      {{> loanGrid}}
+    {{/each}}
+    <tr>
+      <th>Totals / Averages</th>
+      <th class="gridCell gridCurrency">${{totalLoanAmount}}</th>
+      <th class="gridCell">{{totalLoanAverageInterest}}%</th>
+      <th class="gridCell">{{totalLoanAverageMonths}}</th>
+      <th class="gridCell gridCurrency">${{totalLoanPayments}}</th>
+      <th class="gridCell gridCurrency">${{totalLoanBalance}}</th>
+      <th class="gridCell gridPercent">{{totalPercentLoanRemaining}}%</th>
+    </tr>
+  </table>
+  {{else}}
+    <h3>Miscellaneous Loan Accounts</h3>
+    No miscellaneous loans available. Go to the Miscellaneous Loans page and click the "Add Miscellaneous Loan" button to add one.
+  {{/if}}

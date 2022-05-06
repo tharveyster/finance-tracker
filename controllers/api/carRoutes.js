@@ -24,9 +24,9 @@ router.put('/:id', withAuth, async (req, res) => {
       loan_amount: req.body.loan_amount,
       annual_interest_rate: req.body.annual_interest_rate,
       months: req.body.months,
-      payment: (req.body.loan_amount * (req.body.annual_interest_rate / 1200)) / (1 - (Math.pow((1 + (req.body.annual_interest_rate / 1200)) , req.body.months * -1))),
+      payment: req.body.payment,
       balance: req.body.balance,
-      remaining: ((req.body.balance / req.body.loan_amount) * 100)},
+      remaining: req.body.remaining},
       {
         where: {
         id: req.params.id,
