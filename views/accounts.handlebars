@@ -1,6 +1,7 @@
 <!-- Show a list of accounts if there's at lease one available -->
-{{#if accounts.length}}
+{{#if accounts}}
 <div class="accountPosts">
+  <h3>Credit Card Accounts</h3>
 {{#each accounts as |account| }}
   <a href="/edit-account/{{id}}"><button class="btn btn-secondary btn-lg btn-block accountBtn"><span class="accountPost">{{title}}</span></button></a>
 {{/each}}
@@ -9,5 +10,5 @@
 
 <!-- Create new post button -->
   <p class="centered">
-    <button class="btn btn-primary"><a href="/add-account">Add Account</a></button>
+    <button class="btn btn-primary"><a href="/add-account">Add Credit Card</a></button>
   </p>

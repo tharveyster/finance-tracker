@@ -3,9 +3,12 @@ const { User, Account, Mortgage, Car } = require('../models');
 const withAuth = require('../utils/auth');
 
 // Get all accounts
-router.get('/', async (req, res) => {
+router.get('/', withAuth, async (req, res) => {
   try {
     const mortgageData = await Mortgage.findAll({
+      where: {
+        user_id: req.session.user_id,
+      },
       include: [
         {
           model: User,
@@ -38,6 +41,9 @@ router.get('/', async (req, res) => {
     totalPercentMortgageRemaining = (totalPercentMortgageRemaining / mortgages.length).toFixed(2);
 
     const carData = await Car.findAll({
+      where: {
+        user_id: req.session.user_id,
+      },
       include: [
         {
           model: User,
@@ -70,6 +76,9 @@ router.get('/', async (req, res) => {
     totalPercentCarRemaining = (totalPercentCarRemaining / cars.length).toFixed(2);
 
     const accountData = await Account.findAll({
+      where: {
+        user_id: req.session.user_id,
+      },
       order: [['balance', 'ASC'], ['limit', 'DESC']],
       include: [
         {
@@ -198,7 +207,7 @@ router.get('/account/:id', async (req, res) => {
 
     const account = accountData.get({ plain: true });
 
-    res.render('account', {
+    res.render('creditCards', {
       ...account,
       logged_in: req.session.logged_in
     });
