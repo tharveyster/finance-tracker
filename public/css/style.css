@@ -160,3 +160,9 @@ textarea {
 .gridPercent {
   text-align: center;
 }
+
+.accountSection {
+  border:4px double #000;
+  border-radius: 10px;
+  padding: 10px
+}

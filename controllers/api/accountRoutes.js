@@ -23,8 +23,8 @@ router.put('/:id', withAuth, async (req, res) => {
       title: req.body.title,
       limit: req.body.limit,
       balance: req.body.balance,
-      available: req.body.limit - req.body.balance,
-      used: (req.body.balance / req.body.limit) * 100},
+      available: req.body.available,
+      used: req.body.used},
       {
         where: {
         id: req.params.id,

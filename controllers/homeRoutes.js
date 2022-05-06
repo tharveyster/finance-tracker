@@ -3,8 +3,9 @@ const { User, Account, Mortgage, Car, Loan } = require('../models');
 const withAuth = require('../utils/auth');
 
 // Get all accounts
-router.get('/', withAuth, async (req, res) => {
+router.get('/', async (req, res) => {
   try {
+    if (req.session.user_id){
     const mortgageData = await Mortgage.findAll({
       where: {
         user_id: req.session.user_id,
@@ -166,8 +167,11 @@ router.get('/', withAuth, async (req, res) => {
       totalBalance,
       totalAvailable,
       totalUsed,
-      logged_in: req.session.logged_in 
+      logged_in: req.session.logged_in
     });
+    } else {
+      res.render('homepage');
+    }
   } catch (err) {
     console.log(err);
     res.status(500).json(err);

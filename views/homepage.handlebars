@@ -1,12 +1,20 @@
 <!-- Only show this page if the user is logged in -->
 {{#if logged_in}}
-  {{> mortgage}}
-  <br /><br />
+  <div class="accountSection">
+    {{> mortgage}}
+  </div>
+  <br />
+  <div class="accountSection">
   {{> car}}
-  <br /><br />
+  </div>
+  <br />
+  <div class="accountSection">
   {{> creditCards}}
-  <br /><br />
+  </div>
+  <br />
+  <div class="accountSection">
   {{> loan}}
+  </div>
 {{else}}
   You must log in to view your accounts.
 {{/if}}
