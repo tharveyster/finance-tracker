@@ -4,9 +4,6 @@
 ## Description
 This project is a finance tracker that allows users to create user accounts, and create, update, and delete financial accounts. It currently handles mortgages, car loans, and credit cards. It does not keep track of account numbers, just various monetary values and percentages. It was created using HTML, CSS, JavaScript, Node.js, Express.js, Handlebars.js, MySQL, BCrypt, Sequelize, and Sequelize Session.
 
-## Future Development
-I plan to add the capability to track personal/misc loans.
-
 ## Installation
 Clone this repository, go to the repository folder in the terminal, and then run the following command
 
@@ -33,7 +30,7 @@ Change username and password to your MySQL username and password.
 Start the app in the terminal using
 
 ```
-node server.js
+npm start
 ```
 
 and open a browser window and go to http://localhost:3001/
