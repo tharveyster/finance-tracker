@@ -1,0 +1,27 @@
+<!-- Edit car loan card -->
+<div class="accountCard">
+  <div class="accountCardHeader">
+    <div class="accountCardTitle">Edit Car Loan</div>
+  </div>
+  <div class="accountCardBody">
+    <form id="viewCar" class="comment-form">
+    <p>Title</p>
+    <input id="viewCarTitle" class="form-control" value="{{title}}" />
+    <p>Principal Amount</p>
+    <input id="viewCarLoanAmount" class="form-control" value="{{loan_amount}}" />
+    <p>Annual Interest Rate</p>
+    <input id="viewCarAnnualInterestRate" class="form-control" value="{{annual_interest_rate}}" />
+    <p>Loan Term in Years</p>
+    <input id="viewCarMonths" class="form-control" value="{{months}}" />
+    <p>Current Balance</p>
+    <input id="viewCarBalance" class="form-control" value="{{balance}}" />
+    <p class="centered">
+      <button id="updateCarBtn" class="btn btn-primary">Update Car Loan</button>
+      <button id="deleteCarBtn" class="btn btn-primary">Delete</button>
+    </p>
+    </form>
+  </div>
+</div>
+
+<script src="../js/updateCar.js"></script>
+<script src="../js/deleteCar.js"></script>

@@ -1,0 +1,31 @@
+<!-- Show mortgages if any exist, or show 'no mortgage' message if there are none -->
+  {{#if cars}}
+  <h3>Car Loan Accounts</h3>
+  <table class="gridTable">
+    <tr>
+      <th class="gridCell">Account Name</th>
+      <th class="gridCell">Principal Amount</th>
+      <th class="gridCell">Annual Interest Rate</th>
+      <th class="gridCell">Loan Term in Months</th>
+      <th class="gridCell">Monthly Payment</th>
+      <th class="gridCell">Current Balance</th>
+      <th class="gridCell">Percent Remaining</th>
+    </tr>
+    <!-- Loop over each object in the accounts array -->
+    {{#each cars as |car| }}
+      {{> carGrid}}
+    {{/each}}
+    <tr>
+      <th>Totals / Averages</th>
+      <th class="gridCell gridCurrency">${{totalCarAmount}}</th>
+      <th class="gridCell">{{totalCarAverageInterest}}%</th>
+      <th class="gridCell">{{totalCarAverageMonths}}</th>
+      <th class="gridCell gridCurrency">${{totalCarPayments}}</th>
+      <th class="gridCell gridCurrency">${{totalCarBalance}}</th>
+      <th class="gridCell gridPercent">{{totalPercentCarRemaining}}%</th>
+    </tr>
+  </table>
+  {{else}}
+    <h3>Car Loan Accounts</h3>
+    No car loans available. Go to the car loans page and click the "Add Car Loan" button to add one.
+  {{/if}}

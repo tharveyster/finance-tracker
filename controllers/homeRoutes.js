@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { User, Account, Mortgage } = require('../models');
+const { User, Account, Mortgage, Car } = require('../models');
 const withAuth = require('../utils/auth');
 
 // Get all accounts
@@ -37,6 +37,38 @@ router.get('/', async (req, res) => {
     totalMortgageBalance = totalMortgageBalance.toFixed(2);
     totalPercentMortgageRemaining = (totalPercentMortgageRemaining / mortgages.length).toFixed(2);
 
+    const carData = await Car.findAll({
+      include: [
+        {
+          model: User,
+          attributes: ['username'],
+        },
+      ],
+    });
+
+    const cars = carData.map((car) => car.get({ plain: true }));
+
+    let totalCarAmount = 0;
+    let totalCarAverageInterest = 0;
+    let totalCarAverageMonths = 0;
+    let totalCarPayments = 0;
+    let totalCarBalance = 0;
+    let totalPercentCarRemaining = 0;
+    for (let i = 0; i < cars.length; i++) {
+      totalCarAmount += parseFloat(cars[i].loan_amount);
+      totalCarAverageInterest += parseFloat(cars[i].annual_interest_rate);
+      totalCarAverageMonths += parseFloat(cars[i].months);
+      totalCarPayments += parseFloat(cars[i].payment);
+      totalCarBalance += parseFloat(cars[i].balance);
+      totalPercentCarRemaining += parseFloat(cars[i].remaining);
+    }
+    totalCarAmount = totalCarAmount.toFixed(2);
+    totalCarAverageInterest = (totalCarAverageInterest / cars.length).toFixed(2);
+    totalCarAverageMonths = (totalCarAverageMonths / cars.length).toFixed(2);
+    totalCarPayments = totalCarPayments.toFixed(2);
+    totalCarBalance = totalCarBalance.toFixed(2);
+    totalPercentCarRemaining = (totalPercentCarRemaining / cars.length).toFixed(2);
+
     const accountData = await Account.findAll({
       order: [['balance', 'ASC'], ['limit', 'DESC']],
       include: [
@@ -65,6 +97,7 @@ router.get('/', async (req, res) => {
 
     res.render('homepage', { 
       mortgages,
+      cars,
       accounts,
       totalMortgageAmount,
       totalMortgageAverageInterest,
@@ -72,6 +105,12 @@ router.get('/', async (req, res) => {
       totalMortgagePayments,
       totalMortgageBalance,
       totalPercentMortgageRemaining,
+      totalCarAmount,
+      totalCarAverageInterest,
+      totalCarAverageMonths,
+      totalCarPayments,
+      totalCarBalance,
+      totalPercentCarRemaining,
       totalLimit,
       totalBalance,
       totalAvailable,
@@ -105,6 +144,34 @@ router.get('/mortgage/:id', async (req, res) => {
 
     res.render('mortgage', {
       ...mortgage,
+      logged_in: req.session.logged_in
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+// Get car loan by id
+router.get('/car/:id', async (req, res) => {
+  try {
+    const carData = await Car.findByPk(req.params.id, {
+      include: [
+        {
+          model: User,
+          attributes: ['username'],
+        },
+      ],
+    });
+
+    if (!carData) {
+      res.render('404');
+      return;
+    }
+
+    const car = carData.get({ plain: true });
+
+    res.render('car', {
+      ...car,
       logged_in: req.session.logged_in
     });
   } catch (err) {
@@ -160,6 +227,26 @@ router.get('/mortgages', withAuth, async (req, res) => {
   }
 });
 
+// Get car loan page by user_id
+router.get('/cars', withAuth, async (req, res) => {
+  try {
+    const userData = await User.findByPk(req.session.user_id, {
+      attributes: { exclude: ['password'] },
+      include: [{ model: Car }],
+    });
+
+    const user = userData.get({ plain: true });
+
+    res.render('cars', {
+      ...user,
+      logged_in: true
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
 // Get accounts page by user id
 router.get('/accounts', withAuth, async (req, res) => {
   try {
@@ -204,6 +291,11 @@ router.get('/add-mortgage', (req, res) => {
   res.render('add-mortgage');
 });
 
+// New car loan creation page
+router.get('/add-car', (req, res) => {
+  res.render('add-car');
+});
+
 // New account creation page
 router.get('/add-account', (req, res) => {
   res.render('add-account');
@@ -237,6 +329,41 @@ router.get('/edit-mortgage/:id', async (req, res) => {
 
     res.render('edit-mortgage', {
       ...mortgage,
+      logged_in: req.session.logged_in
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+// Edit car loan page
+router.get('/edit-car/:id', async (req, res) => {
+  try {
+    const editCarData = await Car.findByPk(req.params.id, {
+      attributes: [
+        'id',
+        'title',
+        'loan_amount',
+        'annual_interest_rate',
+        'months',
+        'balance',
+        'remaining'
+      ],
+      include: [{
+        model: User,
+        attributes: ['username']
+      }]
+    });
+
+    if (!editCarData) {
+      res.render('404');
+      return;
+    }
+
+    const car = editCarData.get({ plain: true });
+
+    res.render('edit-car', {
+      ...car,
       logged_in: req.session.logged_in
     });
   } catch (err) {
