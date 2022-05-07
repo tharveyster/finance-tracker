@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 
   <head>
@@ -14,20 +13,16 @@
       <header>
         <nav>
           <button class="no-button" id="home"><a href="/">Home</a></button>
-          <button class="no-button" id="mortgages"><a 
-              href="/mortgages"
-            >Mortgages</a></button>
-          <button class="no-button" id="cars"><a 
-              href="/cars"
-            >Car Loans</a></button>
-          <button class="no-button" id="accounts"><a
-              href="/accounts"
-            >Credit Cards</a></button>
-          <button class="no-button" id="loans"><a 
-              href="/loans"
-            >Miscellaneous Loans</a></button>
-          <!-- Conditionally render login or logout links -->
           {{#if logged_in}}
+            <button class="no-button" id="mortgages"><a
+                href="/mortgages"
+              >Mortgages</a></button>
+            <button class="no-button" id="cars"><a href="/cars">Car Loans</a></button>
+            <button class="no-button" id="accounts"><a href="/accounts">Credit
+                Cards</a></button>
+            <button class="no-button" id="loans"><a href="/loans">Miscellaneous
+                Loans</a></button>
+            <!-- Conditionally render login or logout links -->
             <button class="no-button" id="logout"><a
                 href="/logout"
               >Logout</a></button>
