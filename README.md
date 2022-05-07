@@ -4,6 +4,10 @@
 ## Description
 This project is a finance tracker that allows users to create user accounts, and create, update, and delete financial accounts. It currently handles mortgages, car loans, and credit cards. It does not keep track of account numbers, just various monetary values and percentages. It was created using HTML, CSS, JavaScript, Node.js, Express.js, Handlebars.js, MySQL, BCrypt, Sequelize, and Sequelize Session.
 
+## Deployed
+
+A test version of this application has been deployed to Heroku at [this link](https://finance-tracker-8691.herokuapp.com/)
+
 ## Installation
 Clone this repository, go to the repository folder in the terminal, and then run the following command
 
