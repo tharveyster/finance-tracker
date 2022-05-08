@@ -1,3 +1,7 @@
+body {
+  font-size: 16px;
+}
+
 header, .project:not(:last-child) {
   border-bottom: 1px solid #ccc;
 }
@@ -36,10 +40,15 @@ header h1 {
 nav {
   font-size: 25px;
   padding: 10px 0;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-wrap: wrap;
 }
 
 nav button {
-  margin-right: 50px;
+  margin-right: 40px;
 }
 
 button a {
@@ -58,7 +67,6 @@ button a:hover {
   cursor: pointer;
   color: #2c9acd;
   text-decoration: none;
-  font-size: 100%;
 }
 
 .no-button a {
@@ -165,4 +173,24 @@ textarea {
   border:4px double #000;
   border-radius: 10px;
   padding: 10px
+}
+
+@media screen and (max-width: 660px) {
+  body {
+    font-size: 0.8em;
+  }
+
+  nav {
+    flex-direction: column;
+  }
+
+  .gridTable {
+    font-size: 90%;
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .gridTable {
+    font-size: 80%;
+  }
 }
