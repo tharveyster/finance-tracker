@@ -1,10 +1,13 @@
 <!-- Show a list of mortgages if there's at lease one available -->
+<h3>Mortgage Accounts</h3>
 {{#if mortgages.length}}
 <div class="accountPosts">
 {{#each mortgages as |mortgage| }}
   <a href="/edit-mortgage/{{id}}"><button class="btn btn-secondary btn-lg btn-block accountBtn"><span class="accountPost">{{title}}</span></button></a>
 {{/each}}
 </div>
+{{else}}
+<p class="centered">No accounts available</p>
 {{/if}}
 
 <!-- Create new post button -->

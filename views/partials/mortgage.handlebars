@@ -1,6 +1,6 @@
 <!-- Show mortgages if any exist, or show 'no mortgage' message if there are none -->
-  {{#if mortgages}}
   <h3>Mortgage Accounts</h3>
+  {{#if mortgages}}
   <table class="gridTable">
     <tr>
       <th class="gridCell">Account Name</th>
@@ -26,6 +26,5 @@
     </tr>
   </table>
   {{else}}
-    <h3>Mortgage Accounts</h3>
-    <h5>No mortgages available. Go to the Mortgage page and click the "Add Mortgage" button to add one.</h5>
+    <p class="centered">No mortgages available. Go to the Mortgage page and click the "Add Mortgage" button to add one.</p>
   {{/if}}

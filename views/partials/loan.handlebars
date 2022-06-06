@@ -1,6 +1,6 @@
 <!-- Show miscellaneous loans if any exist, or show 'no miscellaneous loans' message if there are none -->
-  {{#if loans}}
   <h3>Miscellaneous Loan Accounts</h3>
+  {{#if loans}}
   <table class="gridTable">
     <tr>
       <th class="gridCell">Account Name</th>
@@ -26,6 +26,5 @@
     </tr>
   </table>
   {{else}}
-    <h3>Miscellaneous Loan Accounts</h3>
-    <h5>No miscellaneous loans available. Go to the Miscellaneous Loans page and click the "Add Miscellaneous Loan" button to add one.</h5>
+    <p class="centered">No miscellaneous loans available. Go to the Miscellaneous Loans page and click the "Add Miscellaneous Loan" button to add one.</p>
   {{/if}}

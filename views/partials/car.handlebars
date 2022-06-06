@@ -1,6 +1,6 @@
 <!-- Show mortgages if any exist, or show 'no mortgage' message if there are none -->
-  {{#if cars}}
   <h3>Car Loan Accounts</h3>
+  {{#if cars}}
   <table class="gridTable">
     <tr>
       <th class="gridCell">Account Name</th>
@@ -26,6 +26,5 @@
     </tr>
   </table>
   {{else}}
-    <h3>Car Loan Accounts</h3>
-    <h5>No car loans available. Go to the Car Loans page and click the "Add Car Loan" button to add one.</h5>
+    <p class="centered">No car loans available. Go to the Car Loans page and click the "Add Car Loan" button to add one.</p>
   {{/if}}

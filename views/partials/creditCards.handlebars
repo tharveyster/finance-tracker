@@ -1,6 +1,6 @@
   <!-- Show accounts if any exist, or show 'no account' message if there are none -->
-  {{#if accounts}}
   <h3>Credit Card Accounts</h3>
+  {{#if accounts}}
   <table class="gridTable">
     <tr>
       <th class="gridCell">Account Name</th>
@@ -22,6 +22,5 @@
     </tr>
   </table>
   {{else}}
-    <h3>Credit Card Accounts</h3>
-    <h5>No credit cards available. Go to the Credit Cards page and click the "Add Credit Card" button to add one.</h5>
+    <p class="centered">No credit cards available. Go to the Credit Cards page and click the "Add Credit Card" button to add one.</p>
   {{/if}}
