@@ -4,6 +4,16 @@
 ## Description
 This project is a finance tracker that allows users to create user accounts, and create, update, and delete financial accounts. It currently handles mortgages, car loans, and credit cards. It does not keep track of account numbers, just various monetary values and percentages. It was created using HTML, CSS, JavaScript, Node.js, Express.js, Handlebars.js, MySQL, BCrypt, Sequelize, and Sequelize Session.
 
+## Screenshots
+|   |   |
+| - | - |
+| Landing page |   |
+| [<img src="./public/images/finance-tracker-initial-view.png" alt="Langind page" width="600">](public/images/finance-tracker-initial-view.png) |   |
+| Login page | Signup page |
+| [<img src="./public/images/finance-tracker-login-page.png" alt="Login page" width="600">](public/images/finance-tracker-login-page.png) | [<img src="./public/images/finance-tracker-signup-page.png" alt="Signup page" width="600">](public/images/finance-tracker-signup-page.png) |
+| Home page before accounts are added | Home page after accounts are added |
+| [<img src="./public/images/finance-tracker-home-page-blank.png" alt="Home page before accounts are added" width="600">](public/images/finance-tracker-home-page-blank.png) | [<img src="./public/images/finance-tracker-home-page.png" alt="Home page after accounts are added" width="600">](public/images/finance-tracker-home-page.png) |
+
 ## Deployed
 
 A test version of this application has been deployed to Heroku at [this link](https://finance-tracker-8691.herokuapp.com/)
