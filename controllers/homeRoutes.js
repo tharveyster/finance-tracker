@@ -296,6 +296,9 @@ router.get('/mortgages', withAuth, async (req, res) => {
     const userData = await User.findByPk(req.session.user_id, {
       attributes: { exclude: ['password'] },
       include: [{ model: Mortgage }],
+      order: [
+        [Mortgage, 'title', 'ASC']
+      ],
     });
 
     const user = userData.get({ plain: true });
