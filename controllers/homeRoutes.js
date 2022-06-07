@@ -336,6 +336,9 @@ router.get('/loans', withAuth, async (req, res) => {
     const userData = await User.findByPk(req.session.user_id, {
       attributes: { exclude: ['password'] },
       include: [{ model: Loan }],
+      order: [
+        [Loan, 'title', 'ASC']
+      ],
     });
 
     const user = userData.get({ plain: true });
