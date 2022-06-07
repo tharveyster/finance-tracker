@@ -31,4 +31,4 @@ const newAccountFormHandler = async (event) => {
   }
 }
 
-document.querySelector('#newAccount').addEventListener('submit', newAccountFormHandler);
+document.querySelector('#createAccount').addEventListener('click', newAccountFormHandler);
