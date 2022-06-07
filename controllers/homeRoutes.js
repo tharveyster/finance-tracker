@@ -46,6 +46,7 @@ router.get('/', async (req, res) => {
       where: {
         user_id: req.session.user_id,
       },
+      order: [['balance', 'ASC']],
       include: [
         {
           model: User,
