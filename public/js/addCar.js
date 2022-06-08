@@ -40,4 +40,4 @@ const newCarFormHandler = async (event) => {
   }
 }
 
-document.querySelector('#newCar').addEventListener('submit', newCarFormHandler);
+document.querySelector('#createCar').addEventListener('click', newCarFormHandler);
