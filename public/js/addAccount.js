@@ -8,7 +8,7 @@ const newAccountFormHandler = async (event) => {
   const available = limit - balance;
   const used = (balance / limit) * 100;
 
-  // Create a new post if both fields contain content
+  // Create a new post if all fields contain content
   if (title && limit && balance) {
     const response = await fetch('/api/accounts', {
       method: 'POST',

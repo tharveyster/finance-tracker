@@ -405,23 +405,79 @@ router.get('/signup', (req, res) => {
 })
 
 // New mortgage creation page
-router.get('/add-mortgage', (req, res) => {
-  res.render('add-mortgage');
+router.get('/add-mortgage', async (req, res) => {
+  try {
+    const userData = await User.findByPk(req.session.user_id, {
+    attributes: { exclude: ['password'] },
+    });
+
+    const user = userData.get({ plain: true });
+
+    res.render('add-mortgage', {
+      ...user,
+      logged_in: true
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
 });
 
 // New car loan creation page
-router.get('/add-car', (req, res) => {
-  res.render('add-car');
+router.get('/add-car', async (req, res) => {
+  try {
+    const userData = await User.findByPk(req.session.user_id, {
+    attributes: { exclude: ['password'] },
+    });
+
+    const user = userData.get({ plain: true });
+
+    res.render('add-car', {
+      ...user,
+      logged_in: true
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
 });
 
 // New miscellaneous loan creation page
-router.get('/add-loan', (req, res) => {
-  res.render('add-loan');
+router.get('/add-loan', async (req, res) => {
+  try {
+    const userData = await User.findByPk(req.session.user_id, {
+    attributes: { exclude: ['password'] },
+    });
+
+    const user = userData.get({ plain: true });
+
+    res.render('add-loan', {
+      ...user,
+      logged_in: true
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
 });
 
 // New account creation page
-router.get('/add-account', (req, res) => {
-  res.render('add-account');
+router.get('/add-account', async (req, res) => {
+  try {
+    const userData = await User.findByPk(req.session.user_id, {
+    attributes: { exclude: ['password'] },
+    });
+
+    const user = userData.get({ plain: true });
+
+    res.render('add-account', {
+      ...user,
+      logged_in: true
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
 });
 
 // Edit mortgage page

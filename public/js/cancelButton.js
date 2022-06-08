@@ -1,7 +1,7 @@
 const cancelFormHandler = async (event) => {
   event.preventDefault();
 
-  document.location.replace('/accounts');
+  history.back();
 }
 
 document.querySelector('#cancelButton').addEventListener('click', cancelFormHandler);

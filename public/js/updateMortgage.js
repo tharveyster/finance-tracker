@@ -32,7 +32,7 @@ const updateFormHandler = async (event) => {
     }),
     headers: { 'Content-Type': 'application/json' }
   });
-  console.log(response);
+
   // If successful redirect the browser to the mortgages page
   if (response.ok) {
     document.location.replace('/mortgages');

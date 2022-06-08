@@ -40,4 +40,4 @@ const newMortgageFormHandler = async (event) => {
   }
 }
 
-document.querySelector('#newMortgage').addEventListener('submit', newMortgageFormHandler);
+document.querySelector('#createMortgage').addEventListener('click', newMortgageFormHandler);
