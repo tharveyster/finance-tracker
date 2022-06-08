@@ -40,4 +40,4 @@ const newLoanFormHandler = async (event) => {
   }
 }
 
-document.querySelector('#newLoan').addEventListener('submit', newLoanFormHandler);
+document.querySelector('#createLoan').addEventListener('click', newLoanFormHandler);
