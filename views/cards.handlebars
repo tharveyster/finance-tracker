@@ -1,0 +1,16 @@
+<!-- Show a list of accounts if there's at lease one available -->
+<h3>Credit Card Accounts</h3>
+{{#if cards}}
+<div class="accountPosts">
+{{#each cards as |card| }}
+  <a href="/edit-card/{{id}}"><button class="btn btn-secondary btn-lg btn-block accountBtn"><span class="accountPost">{{title}}</span></button></a>
+{{/each}}
+</div>
+{{else}}
+<p class="centered">No accounts available</p>
+{{/if}}
+
+<!-- Create new post button -->
+  <p class="centered">
+    <button class="btn btn-primary"><a href="/add-card">Add Credit Card</a></button>
+  </p>

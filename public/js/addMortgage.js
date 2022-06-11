@@ -31,7 +31,7 @@ const newMortgageFormHandler = async (event) => {
       headers: { 'Content-Type': 'application/json'},
     });
 
-    // If successful return the browser to the accounts page
+    // If successful return the browser to the mortgages page
     if (response.ok) {
       document.location.replace('/mortgages');
     } else {

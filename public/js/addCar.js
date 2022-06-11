@@ -31,7 +31,7 @@ const newCarFormHandler = async (event) => {
       headers: { 'Content-Type': 'application/json'},
     });
 
-    // If successful return the browser to the accounts page
+    // If successful return the browser to the car loans page
     if (response.ok) {
       document.location.replace('/cars');
     } else {

@@ -1,0 +1,25 @@
+<!-- Edit credit card card -->
+<div class="accountCard">
+  <div class="accountCardHeader">
+    <div class="accountCardTitle">Edit Credit Card Account</div>
+  </div>
+  <div class="accountCardBody">
+    <form id="viewCard" class="comment-form">
+    <p>Title</p>
+    <input id="viewCardTitle" class="form-control" value="{{title}}" />
+    <p>Credit Limit</p>
+    <input id="viewCardLimit" class="form-control" value="{{limit}}" />
+    <p>Current Balance</p>
+    <input id="viewCardBalance" class="form-control" value="{{balance}}" />
+    <p class="centered">
+      <button id="updateCardBtn" class="btn btn-primary">Update</button>
+      <button id="deleteCardBtn" class="btn btn-danger">Delete</button>
+      <button id="cancelButton" class="btn">Cancel</button>
+    </p>
+    </form>
+  </div>
+</div>
+
+<script src="../js/updateCard.js"></script>
+<script src="../js/deleteCard.js"></script>
+<script src="../js/cancelButton.js"></script>

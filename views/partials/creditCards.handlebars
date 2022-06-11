@@ -1,6 +1,6 @@
   <!-- Show accounts if any exist, or show 'no account' message if there are none -->
   <h3>Credit Card Accounts</h3>
-  {{#if accounts}}
+  {{#if cards}}
   <table class="gridTable">
     <tr>
       <th class="gridCell">Account Name</th>
@@ -10,8 +10,8 @@
       <th class="gridCell">Percent Used</th>
     </tr>
     <!-- Loop over each object in the accounts array -->
-    {{#each accounts as |account| }}
-      {{> grid}}
+    {{#each cards as |card| }}
+      {{> cardGrid}}
     {{/each}}
     <tr>
       <th>Totals</th>
