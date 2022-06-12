@@ -14,6 +14,7 @@
         <nav>
           <button class="no-button" id="home"><a href="/">Home</a></button>
           {{#if logged_in}}
+            <button class="no-button" id="accounts"><a href="/accounts">Bank Accounts</a></button>
             <button class="no-button" id="mortgages"><a
                 href="/mortgages"
               >Mortgages</a></button>
@@ -32,7 +33,7 @@
               >Login</a></button>
           {{/if}}
         </nav>
-        <h1 style="color:#fff">
+        <h1>
           Finance Tracker
         </h1>
       </header>
