@@ -21,10 +21,7 @@ router.put('/:id', withAuth, async (req, res) => {
   try {
     const accountData = await Account.update({
       title: req.body.title,
-      limit: req.body.limit,
-      balance: req.body.balance,
-      available: req.body.available,
-      used: req.body.used},
+      balance: req.body.balance},
       {
         where: {
         id: req.params.id,
