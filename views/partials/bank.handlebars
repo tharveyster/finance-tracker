@@ -1,18 +1,18 @@
 <!-- Show accounts if any exist, or show 'no mortgage' message if there are none -->
-  <h3><a href="/accounts">Bank Accounts</a></h3>
-  {{#if accounts}}
+  <h3><a href="/banks">Bank Accounts</a></h3>
+  {{#if banks}}
   <table class="gridTable">
     <tr>
       <th class="gridCell">Account Name</th>
       <th class="gridCell">Current Balance</th>
     </tr>
     <!-- Loop over each object in the accounts array -->
-    {{#each accounts as |account| }}
-      {{> accountGrid}}
+    {{#each banks as |bank| }}
+      {{> bankGrid}}
     {{/each}}
     <tr>
       <th>Total</th>
-      <th class="gridCell gridCurrency">${{totalAccountBalance}}</th>
+      <th class="gridCell gridCurrency">${{totalBankBalance}}</th>
     </tr>
   </table>
   {{else}}

@@ -1,12 +1,12 @@
 const router = require('express').Router();
-const { User, Card, Mortgage, Car, Loan, Account } = require('../models');
+const { User, Card, Mortgage, Car, Loan, Bank } = require('../models');
 const withAuth = require('../utils/auth');
 
 // Get all cards
 router.get('/', async (req, res) => {
   try {
     if (req.session.user_id){
-      const accountData = await Account.findAll({
+      const bankData = await Bank.findAll({
         where: {
           user_id: req.session.user_id,
         },
@@ -19,13 +19,13 @@ router.get('/', async (req, res) => {
         ],
       });
   
-      const accounts = accountData.map((account) => account.get({ plain: true }));
+      const banks = bankData.map((bank) => bank.get({ plain: true }));
   
-      let totalAccountBalance = 0;
-      for (let i = 0; i < accounts.length; i++) {
-        totalAccountBalance += parseFloat(accounts[i].balance);
+      let totalBankBalance = 0;
+      for (let i = 0; i < banks.length; i++) {
+        totalBankBalance += parseFloat(banks[i].balance);
       }
-      totalAccountBalance = totalAccountBalance.toFixed(2);
+      totalBankBalance = totalBankBalance.toFixed(2);
   
       const mortgageData = await Mortgage.findAll({
       where: {
@@ -165,12 +165,12 @@ router.get('/', async (req, res) => {
     totalUsed = ((totalBalance / totalLimit) * 100).toFixed(2);
 
     res.render('homepage', { 
-      accounts,
+      banks,
       mortgages,
       cars,
       loans,
       cards,
-      totalAccountBalance,
+      totalBankBalance,
       totalMortgageAmount,
       totalMortgageAverageInterest,
       totalMortgageAverageYears,
@@ -205,9 +205,9 @@ router.get('/', async (req, res) => {
 })
 
 // Get bank account by id
-router.get('/account/:id', async (req, res) => {
+router.get('/bank/:id', async (req, res) => {
   try {
-    const accountData = await Account.findByPk(req.params.id, {
+    const bankData = await Bank.findByPk(req.params.id, {
       include: [
         {
           model: User,
@@ -216,15 +216,15 @@ router.get('/account/:id', async (req, res) => {
       ],
     });
 
-    if (!accountData) {
+    if (!bankData) {
       res.render('404');
       return;
     }
 
-    const account = accountData.get({ plain: true });
+    const bank = bankData.get({ plain: true });
 
-    res.render('account', {
-      ...account,
+    res.render('bank', {
+      ...bank,
       logged_in: req.session.logged_in
     });
   } catch (err) {
@@ -345,19 +345,19 @@ router.get('/card/:id', async (req, res) => {
 });
 
 // Get bank accounts page by user_id
-router.get('/accounts', withAuth, async (req, res) => {
+router.get('/banks', withAuth, async (req, res) => {
   try {
     const userData = await User.findByPk(req.session.user_id, {
       attributes: { exclude: ['password'] },
-      include: [{ model: Account }],
+      include: [{ model: Bank }],
       order: [
-        [Account, 'title', 'ASC']
+        [Bank, 'title', 'ASC']
       ],
     });
 
     const user = userData.get({ plain: true });
 
-    res.render('accounts', {
+    res.render('banks', {
       ...user,
       logged_in: true
     });
@@ -479,7 +479,7 @@ router.get('/signup', (req, res) => {
 })
 
 // New bank account creation page
-router.get('/add-account', async (req, res) => {
+router.get('/add-bank', async (req, res) => {
   try {
     const userData = await User.findByPk(req.session.user_id, {
     attributes: { exclude: ['password'] },
@@ -487,7 +487,7 @@ router.get('/add-account', async (req, res) => {
 
     const user = userData.get({ plain: true });
 
-    res.render('add-account', {
+    res.render('add-bank', {
       ...user,
       logged_in: true
     });
@@ -574,9 +574,9 @@ router.get('/add-card', async (req, res) => {
 });
 
 // Edit bank account page
-router.get('/edit-account/:id', async (req, res) => {
+router.get('/edit-bank/:id', async (req, res) => {
   try {
-    const editAccountData = await Account.findByPk(req.params.id, {
+    const editBankData = await Bank.findByPk(req.params.id, {
       attributes: [
         'id',
         'title',
@@ -588,15 +588,15 @@ router.get('/edit-account/:id', async (req, res) => {
       }]
     });
 
-    if (!editAccountData) {
+    if (!editBankData) {
       res.render('404');
       return;
     }
 
-    const account = editAccountData.get({ plain: true });
+    const bank = editBankData.get({ plain: true });
 
-    res.render('edit-account', {
-      ...account,
+    res.render('edit-bank', {
+      ...bank,
       logged_in: req.session.logged_in
     });
   } catch (err) {

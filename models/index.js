@@ -3,7 +3,7 @@ const Card = require('./Card');
 const Mortgage = require('./Mortgage');
 const Car = require('./Car');
 const Loan = require('./Loan');
-const Account = require('./Account');
+const Bank = require('./Bank');
 
 User.hasMany(Card, {
   foreignKey: 'user_id',
@@ -25,7 +25,7 @@ User.hasMany(Loan, {
   onDelete: 'CASCADE'
 });
 
-User.hasMany(Account, {
+User.hasMany(Bank, {
   foreignKey: 'userId',
   onDelete: 'CASCADE'
 })
@@ -50,9 +50,9 @@ Loan.belongsTo(User, {
   onDelete: 'CASCADE'
 })
 
-Account.belongsTo(User, {
+Bank.belongsTo(User, {
   foreignKey: 'user_id',
   onDelete: 'CASCADE'
 })
 
-module.exports = { User, Card, Mortgage, Car, Loan, Account };
+module.exports = { User, Card, Mortgage, Car, Loan, Bank };

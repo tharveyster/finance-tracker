@@ -1,25 +1,25 @@
 const router = require('express').Router();
-const { Account } = require('../../models');
+const { Bank } = require('../../models');
 const withAuth = require('../../utils/auth');
 
-// Create new account
+// Create new bank account
 router.post('/', withAuth, async (req, res) => {
   try {
-    const newAccount = await Account.create({
+    const newBank = await Bank.create({
       ...req.body,
       user_id: req.session.user_id,
     });
 
-    res.status(200).json(newAccount);
+    res.status(200).json(newBank);
   } catch (err) {
     res.status(400).json(err);
   }
 });
 
-// Update existing account by id route
+// Update existing bank account by id route
 router.put('/:id', withAuth, async (req, res) => {
   try {
-    const accountData = await Account.update({
+    const bankData = await Bank.update({
       title: req.body.title,
       balance: req.body.balance},
       {
@@ -29,33 +29,33 @@ router.put('/:id', withAuth, async (req, res) => {
       },
     });
 
-    if(!accountData) {
+    if(!bankData) {
       res.render('404');
       return;
     }
 
-    res.status(200).json(accountData);
+    res.status(200).json(bankData);
   } catch (err) {
     res.status(500).json(err);
   }
 })
 
-// Delete existing account by id route
+// Delete existing bank account by id route
 router.delete('/:id', withAuth, async (req, res) => {
   try {
-    const accountData = await Account.destroy({
+    const bankData = await Bank.destroy({
       where: {
         id: req.params.id,
         user_id: req.session.user_id,
       },
     });
 
-    if (!accountData) {
+    if (!bankData) {
       res.render('404');
       return;
     }
 
-    res.status(200).json(accountData);
+    res.status(200).json(bankData);
   } catch (err) {
     res.status(500).json(err);
   }
