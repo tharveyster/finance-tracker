@@ -335,7 +335,7 @@ router.get('/card/:id', async (req, res) => {
 
     const card = cardData.get({ plain: true });
 
-    res.render('creditCards', {
+    res.render('card', {
       ...card,
       logged_in: req.session.logged_in
     });
