@@ -164,6 +164,9 @@ router.get('/', async (req, res) => {
     totalAvailable = totalAvailable.toFixed(2);
     totalUsed = ((totalBalance / totalLimit) * 100).toFixed(2);
 
+    totalDebt = parseFloat(totalMortgageBalance) + parseFloat(totalCarBalance) + parseFloat(totalLoanBalance) + parseFloat(totalBalance);
+    totalDebt = totalDebt.toFixed(2);
+
     res.render('homepage', { 
       banks,
       mortgages,
@@ -193,6 +196,7 @@ router.get('/', async (req, res) => {
       totalBalance,
       totalAvailable,
       totalUsed,
+      totalDebt,
       logged_in: req.session.logged_in
     });
     } else {
