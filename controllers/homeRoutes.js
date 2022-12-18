@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { User, Card, Mortgage, Car, Loan, Bank } = require('../models');
+const Retirement = require('../models/401K');
 const withAuth = require('../utils/auth');
 
 // Get all cards
@@ -139,7 +140,7 @@ router.get('/', async (req, res) => {
       where: {
         user_id: req.session.user_id,
       },
-      order: [['balance', 'ASC'], ['limit', 'DESC']],
+      order: [['balance', 'DESC'], ['limit', 'DESC']],
       include: [
         {
           model: User,
@@ -164,8 +165,34 @@ router.get('/', async (req, res) => {
     totalAvailable = totalAvailable.toFixed(2);
     totalUsed = ((totalBalance / totalLimit) * 100).toFixed(2);
 
+    const retirementData = await Retirement.findAll({
+      where: {
+        user_id: req.session.user_id,
+      },
+      order: [['balance', 'DESC']],
+      include: [
+        {
+          model: User,
+          attributes: ['username'],
+        },
+      ],
+    });
+
+    const retirements = retirementData.map((retirement) => retirement.get({ plain: true }));
+
+    let total401kBalance = 0;
+    for (let i = 0; i < retirements.length; i++) {
+      total401kBalance += parseFloat(retirements[i].balance);
+    }
+    total401kBalance = total401kBalance.toFixed(2);
+
+    totalAssets = parseFloat(totalBankBalance) + parseFloat(total401kBalance);
+    totalAssets = totalAssets.toFixed(2);
+
     totalDebt = parseFloat(totalMortgageBalance) + parseFloat(totalCarBalance) + parseFloat(totalLoanBalance) + parseFloat(totalBalance);
     totalDebt = totalDebt.toFixed(2);
+
+    netWorth = totalAssets - totalDebt;
 
     res.render('homepage', { 
       banks,
@@ -173,6 +200,7 @@ router.get('/', async (req, res) => {
       cars,
       loans,
       cards,
+      retirements,
       totalBankBalance,
       totalMortgageAmount,
       totalMortgageAverageInterest,
@@ -196,7 +224,10 @@ router.get('/', async (req, res) => {
       totalBalance,
       totalAvailable,
       totalUsed,
+      total401kBalance,
+      totalAssets,
       totalDebt,
+      netWorth,
       logged_in: req.session.logged_in
     });
     } else {
@@ -462,6 +493,29 @@ router.get('/cards', withAuth, async (req, res) => {
   }
 });
 
+// Get 401k accounts page by user_id
+router.get('/401ks', withAuth, async (req, res) => {
+  try {
+    const userData = await User.findByPk(req.session.user_id, {
+      attributes: { exclude: ['password'] },
+      include: [{ model: Retirement }],
+      order: [
+        [Retirement, 'title', 'ASC']
+      ],
+    });
+
+    const user = userData.get({ plain: true });
+
+    res.render('401ks', {
+      ...user,
+      logged_in: true
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
 // Log in if not already logged in
 router.get('/login', (req, res) => {
   if (req.session.logged_in) {
@@ -568,6 +622,25 @@ router.get('/add-card', async (req, res) => {
     const user = userData.get({ plain: true });
 
     res.render('add-card', {
+      ...user,
+      logged_in: true
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
+// New 401k account creation page
+router.get('/add-401k', async (req, res) => {
+  try {
+    const userData = await User.findByPk(req.session.user_id, {
+    attributes: { exclude: ['password'] },
+    });
+
+    const user = userData.get({ plain: true });
+
+    res.render('add-401k', {
       ...user,
       logged_in: true
     });
@@ -738,6 +811,37 @@ router.get('/edit-loan/:id', async (req, res) => {
 
     res.render('edit-loan', {
       ...loan,
+      logged_in: req.session.logged_in
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+// Edit 401k account page
+router.get('/edit-401k/:id', async (req, res) => {
+  try {
+    const edit401kData = await Retirement.findByPk(req.params.id, {
+      attributes: [
+        'id',
+        'title',
+        'balance'
+      ],
+      include: [{
+        model: User,
+        attributes: ['username']
+      }]
+    });
+
+    if (!edit401kData) {
+      res.render('404');
+      return;
+    }
+
+    const retirement = edit401kData.get({ plain: true });
+
+    res.render('edit-401k', {
+      ...retirement,
       logged_in: req.session.logged_in
     });
   } catch (err) {
