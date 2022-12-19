@@ -1,0 +1,16 @@
+<!-- Show a list of mortgages if there's at lease one available -->
+<h3>IRA Accounts</h3>
+{{#if iras.length}}
+<div class="accountPosts">
+{{#each iras as |ira| }}
+  <a href="/edit-ira/{{id}}"><button class="btn btn-secondary btn-lg btn-block accountBtn"><span class="accountPost">{{title}}</span></button></a>
+{{/each}}
+</div>
+{{else}}
+<p class="centered">No accounts available</p>
+{{/if}}
+
+<!-- Create new post button -->
+  <p class="centered">
+    <button class="btn btn-primary"><a href="/add-ira">Add IRA Account</a></button>
+  </p>

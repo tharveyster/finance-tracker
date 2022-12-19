@@ -1,9 +1,8 @@
 const router = require('express').Router();
-const { User, Card, Mortgage, Car, Loan, Bank } = require('../models');
-const Retirement = require('../models/401K');
+const { User, Card, Mortgage, Car, Loan, Bank, Retirement, Ira } = require('../models');
 const withAuth = require('../utils/auth');
 
-// Get all cards
+// Get all types of accounts
 router.get('/', async (req, res) => {
   try {
     if (req.session.user_id){
@@ -186,13 +185,35 @@ router.get('/', async (req, res) => {
     }
     total401kBalance = total401kBalance.toFixed(2);
 
-    totalAssets = parseFloat(totalBankBalance) + parseFloat(total401kBalance);
+    const iraData = await Ira.findAll({
+      where: {
+        user_id: req.session.user_id,
+      },
+      order: [['balance', 'DESC']],
+      include: [
+        {
+          model: User,
+          attributes: ['username'],
+        },
+      ],
+    });
+
+    const iras = iraData.map((ira) => ira.get({ plain: true }));
+
+    let totalIraBalance = 0;
+    for (let i = 0; i < iras.length; i++) {
+      totalIraBalance += parseFloat(iras[i].balance);
+    }
+    totalIraBalance = totalIraBalance.toFixed(2);
+
+    totalAssets = parseFloat(totalBankBalance) + parseFloat(total401kBalance) + parseFloat(totalIraBalance);
     totalAssets = totalAssets.toFixed(2);
 
     totalDebt = parseFloat(totalMortgageBalance) + parseFloat(totalCarBalance) + parseFloat(totalLoanBalance) + parseFloat(totalBalance);
     totalDebt = totalDebt.toFixed(2);
 
     netWorth = totalAssets - totalDebt;
+    netWorth = netWorth.toFixed(2);
 
     res.render('homepage', { 
       banks,
@@ -201,6 +222,7 @@ router.get('/', async (req, res) => {
       loans,
       cards,
       retirements,
+      iras,
       totalBankBalance,
       totalMortgageAmount,
       totalMortgageAverageInterest,
@@ -225,6 +247,7 @@ router.get('/', async (req, res) => {
       totalAvailable,
       totalUsed,
       total401kBalance,
+      totalIraBalance,
       totalAssets,
       totalDebt,
       netWorth,
@@ -379,6 +402,62 @@ router.get('/card/:id', async (req, res) => {
   }
 });
 
+// Get 401K account by id
+router.get('/401k/:id', async (req, res) => {
+  try {
+    const retirementData = await Retirement.findByPk(req.params.id, {
+      include: [
+        {
+          model: User,
+          attributes: ['username'],
+        },
+      ],
+    });
+
+    if (!retirementData) {
+      res.render('404');
+      return;
+    }
+
+    const retirement = retirementData.get({ plain: true });
+
+    res.render('401k', {
+      ...retirement,
+      logged_in: req.session.logged_in
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+// Get IRA account by id
+router.get('/ira/:id', async (req, res) => {
+  try {
+    const iraData = await Ira.findByPk(req.params.id, {
+      include: [
+        {
+          model: User,
+          attributes: ['username'],
+        },
+      ],
+    });
+
+    if (!iraData) {
+      res.render('404');
+      return;
+    }
+
+    const ira = iraData.get({ plain: true });
+
+    res.render('ira', {
+      ...ira,
+      logged_in: req.session.logged_in
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 // Get bank accounts page by user_id
 router.get('/banks', withAuth, async (req, res) => {
   try {
@@ -516,6 +595,29 @@ router.get('/401ks', withAuth, async (req, res) => {
   }
 });
 
+// Get IRA accounts page by user_id
+router.get('/iras', withAuth, async (req, res) => {
+  try {
+    const userData = await User.findByPk(req.session.user_id, {
+      attributes: { exclude: ['password'] },
+      include: [{ model: Ira }],
+      order: [
+        [Ira, 'title', 'ASC']
+      ],
+    });
+
+    const user = userData.get({ plain: true });
+
+    res.render('iras', {
+      ...user,
+      logged_in: true
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
 // Log in if not already logged in
 router.get('/login', (req, res) => {
   if (req.session.logged_in) {
@@ -641,6 +743,25 @@ router.get('/add-401k', async (req, res) => {
     const user = userData.get({ plain: true });
 
     res.render('add-401k', {
+      ...user,
+      logged_in: true
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
+// New IRA account creation page
+router.get('/add-ira', async (req, res) => {
+  try {
+    const userData = await User.findByPk(req.session.user_id, {
+    attributes: { exclude: ['password'] },
+    });
+
+    const user = userData.get({ plain: true });
+
+    res.render('add-ira', {
       ...user,
       logged_in: true
     });
@@ -842,6 +963,37 @@ router.get('/edit-401k/:id', async (req, res) => {
 
     res.render('edit-401k', {
       ...retirement,
+      logged_in: req.session.logged_in
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+// Edit IRA account page
+router.get('/edit-ira/:id', async (req, res) => {
+  try {
+    const editIraData = await Ira.findByPk(req.params.id, {
+      attributes: [
+        'id',
+        'title',
+        'balance'
+      ],
+      include: [{
+        model: User,
+        attributes: ['username']
+      }]
+    });
+
+    if (!editIraData) {
+      res.render('404');
+      return;
+    }
+
+    const ira = editIraData.get({ plain: true });
+
+    res.render('edit-ira', {
+      ...ira,
       logged_in: req.session.logged_in
     });
   } catch (err) {
