@@ -1,0 +1,16 @@
+<!-- Show a list of mortgages if there's at lease one available -->
+<h3>CD Accounts</h3>
+{{#if cds.length}}
+<div class="accountPosts">
+{{#each cds as |cd| }}
+  <a href="/edit-cd/{{id}}"><button class="btn btn-secondary btn-lg btn-block accountBtn"><span class="accountPost">{{title}}</span></button></a>
+{{/each}}
+</div>
+{{else}}
+<p class="centered">No accounts available</p>
+{{/if}}
+
+<!-- Create new post button -->
+  <p class="centered">
+    <button class="btn btn-primary"><a href="/add-cd">Add CD Account</a></button>
+  </p>

@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { User, Card, Mortgage, Car, Loan, Bank, Retirement, Ira } = require('../models');
+const { User, Card, Mortgage, Car, Loan, Bank, Retirement, Ira, Cd } = require('../models');
 const withAuth = require('../utils/auth');
 
 // Get all types of accounts
@@ -206,7 +206,28 @@ router.get('/', async (req, res) => {
     }
     totalIraBalance = totalIraBalance.toFixed(2);
 
-    totalAssets = parseFloat(totalBankBalance) + parseFloat(total401kBalance) + parseFloat(totalIraBalance);
+    const cdData = await Cd.findAll({
+      where: {
+        user_id: req.session.user_id,
+      },
+      order: [['balance', 'DESC']],
+      include: [
+        {
+          model: User,
+          attributes: ['username'],
+        },
+      ],
+    });
+
+    const cds = cdData.map((cd) => cd.get({ plain: true }));
+
+    let totalCdBalance = 0;
+    for (let i = 0; i < cds.length; i++) {
+      totalCdBalance += parseFloat(cds[i].balance);
+    }
+    totalCdBalance = totalCdBalance.toFixed(2);
+
+    totalAssets = parseFloat(totalBankBalance) + parseFloat(total401kBalance) + parseFloat(totalIraBalance) + parseFloat(totalCdBalance);
     totalAssets = totalAssets.toFixed(2);
 
     totalDebt = parseFloat(totalMortgageBalance) + parseFloat(totalCarBalance) + parseFloat(totalLoanBalance) + parseFloat(totalBalance);
@@ -223,6 +244,7 @@ router.get('/', async (req, res) => {
       cards,
       retirements,
       iras,
+      cds,
       totalBankBalance,
       totalMortgageAmount,
       totalMortgageAverageInterest,
@@ -248,6 +270,7 @@ router.get('/', async (req, res) => {
       totalUsed,
       total401kBalance,
       totalIraBalance,
+      totalCdBalance,
       totalAssets,
       totalDebt,
       netWorth,
@@ -458,6 +481,34 @@ router.get('/ira/:id', async (req, res) => {
   }
 });
 
+// Get CD account by id
+router.get('/cd/:id', async (req, res) => {
+  try {
+    const cdData = await Cd.findByPk(req.params.id, {
+      include: [
+        {
+          model: User,
+          attributes: ['username'],
+        },
+      ],
+    });
+
+    if (!cdData) {
+      res.render('404');
+      return;
+    }
+
+    const cd = cdData.get({ plain: true });
+
+    res.render('cd', {
+      ...cd,
+      logged_in: req.session.logged_in
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 // Get bank accounts page by user_id
 router.get('/banks', withAuth, async (req, res) => {
   try {
@@ -618,6 +669,29 @@ router.get('/iras', withAuth, async (req, res) => {
   }
 });
 
+// Get CD accounts page by user_id
+router.get('/cds', withAuth, async (req, res) => {
+  try {
+    const userData = await User.findByPk(req.session.user_id, {
+      attributes: { exclude: ['password'] },
+      include: [{ model: Cd }],
+      order: [
+        [Cd, 'title', 'ASC']
+      ],
+    });
+
+    const user = userData.get({ plain: true });
+
+    res.render('cds', {
+      ...user,
+      logged_in: true
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
 // Log in if not already logged in
 router.get('/login', (req, res) => {
   if (req.session.logged_in) {
@@ -762,6 +836,25 @@ router.get('/add-ira', async (req, res) => {
     const user = userData.get({ plain: true });
 
     res.render('add-ira', {
+      ...user,
+      logged_in: true
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
+// New CD account creation page
+router.get('/add-cd', async (req, res) => {
+  try {
+    const userData = await User.findByPk(req.session.user_id, {
+    attributes: { exclude: ['password'] },
+    });
+
+    const user = userData.get({ plain: true });
+
+    res.render('add-cd', {
       ...user,
       logged_in: true
     });
@@ -994,6 +1087,37 @@ router.get('/edit-ira/:id', async (req, res) => {
 
     res.render('edit-ira', {
       ...ira,
+      logged_in: req.session.logged_in
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+// Edit CD account page
+router.get('/edit-cd/:id', async (req, res) => {
+  try {
+    const editCdData = await Cd.findByPk(req.params.id, {
+      attributes: [
+        'id',
+        'title',
+        'balance'
+      ],
+      include: [{
+        model: User,
+        attributes: ['username']
+      }]
+    });
+
+    if (!editCdData) {
+      res.render('404');
+      return;
+    }
+
+    const cd = editCdData.get({ plain: true });
+
+    res.render('edit-cd', {
+      ...cd,
       logged_in: req.session.logged_in
     });
   } catch (err) {

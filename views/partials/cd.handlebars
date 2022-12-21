@@ -1,0 +1,20 @@
+<!-- Show accounts if any exist, or show 'no mortgage' message if there are none -->
+  <h3><a href="/cds">CD Accounts</a></h3>
+  {{#if cds}}
+  <table class="gridTable">
+    <tr>
+      <th class="gridCell">Account Name</th>
+      <th class="gridCell">Current Balance</th>
+    </tr>
+    <!-- Loop over each object in the accounts array -->
+    {{#each cds as |cd| }}
+      {{> cdGrid}}
+    {{/each}}
+    <tr>
+      <th>Total</th>
+      <th class="gridCell gridCurrency">${{totalCdBalance}}</th>
+    </tr>
+  </table>
+  {{else}}
+    <p class="centered">No CD accounts available. Go to the CD Accounts page and click the "Add CD Account" button to add one.</p>
+  {{/if}}
