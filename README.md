@@ -2,7 +2,7 @@
 [![ISC License badge](https://img.shields.io/github/license/tharveyster/tech-blog?style=plastic)](https://opensource.org/licenses/ISC)
 
 ## Description
-This project is a finance tracker that allows users to create user accounts, and create, update, and delete financial accounts. It currently handles mortgages, car loans, and credit cards. It does not keep track of account numbers, just various monetary values and percentages. It was created using HTML, CSS, JavaScript, Node.js, Express.js, Handlebars.js, MySQL, BCrypt, Sequelize, and Sequelize Session.
+This project is a finance tracker that allows users to create user accounts, and create, update, and delete financial accounts. It currently handles bank accounts, mortgages, car loans, miscellaneous loans, credit cards, 401Ks, IRAs, CDs, and brokerage accounts. It does not keep track of account numbers, just various monetary values and percentages. It was created using HTML, CSS, JavaScript, Node.js, Express.js, Handlebars.js, MySQL, BCrypt, Sequelize, and Sequelize Session.
 
 ## Screenshots
 | Landing page |
