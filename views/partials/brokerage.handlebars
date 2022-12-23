@@ -1,0 +1,20 @@
+<!-- Show accounts if any exist, or show 'no mortgage' message if there are none -->
+  <h3><a href="/brokerages">Brokerage Accounts</a></h3>
+  {{#if brokerages}}
+  <table class="gridTable">
+    <tr>
+      <th class="gridCell">Account Name</th>
+      <th class="gridCell">Current Balance</th>
+    </tr>
+    <!-- Loop over each object in the accounts array -->
+    {{#each brokerages as |brokerage| }}
+      {{> brokerageGrid}}
+    {{/each}}
+    <tr>
+      <th>Total</th>
+      <th class="gridCell gridCurrency">${{totalBrokerageBalance}}</th>
+    </tr>
+  </table>
+  {{else}}
+    <p class="centered">No brokerage accounts available. Go to the Brokerage Accounts page and click the "Add Brokerage Account" button to add one.</p>
+  {{/if}}

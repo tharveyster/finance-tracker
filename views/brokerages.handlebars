@@ -1,0 +1,16 @@
+<!-- Show a list of brokerages if there's at lease one available -->
+<h3>Brokerage Accounts</h3>
+{{#if brokerages.length}}
+<div class="accountPosts">
+{{#each brokerages as |brokerage| }}
+  <a href="/edit-brokerage/{{id}}"><button class="btn btn-secondary btn-lg btn-block accountBtn"><span class="accountPost">{{title}}</span></button></a>
+{{/each}}
+</div>
+{{else}}
+<p class="centered">No accounts available</p>
+{{/if}}
+
+<!-- Create new post button -->
+  <p class="centered">
+    <button class="btn btn-primary"><a href="/add-brokerage">Add Brokerage Account</a></button>
+  </p>

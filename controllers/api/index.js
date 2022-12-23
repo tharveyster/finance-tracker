@@ -8,6 +8,7 @@ const bankRoutes = require('./bankRoutes');
 const retirementRoutes = require('./401kRoutes');
 const iraRoutes = require('./iraRoutes');
 const cdRoutes = require('./cdRoutes');
+const brokerageRoutes = require('./brokerageRoutes');
 
 router.use('/users', userRoutes);
 router.use('/cards', cardRoutes);
@@ -18,5 +19,6 @@ router.use('/banks', bankRoutes);
 router.use('/401ks', retirementRoutes);
 router.use('/iras', iraRoutes);
 router.use('/cds', cdRoutes);
+router.use('/brokerages', brokerageRoutes);
 
 module.exports = router;

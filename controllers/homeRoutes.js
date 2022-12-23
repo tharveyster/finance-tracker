@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { User, Card, Mortgage, Car, Loan, Bank, Retirement, Ira, Cd } = require('../models');
+const { User, Card, Mortgage, Car, Loan, Bank, Retirement, Ira, Cd, Brokerage } = require('../models');
 const withAuth = require('../utils/auth');
 
 // Get all types of accounts
@@ -227,7 +227,28 @@ router.get('/', async (req, res) => {
     }
     totalCdBalance = totalCdBalance.toFixed(2);
 
-    totalAssets = parseFloat(totalBankBalance) + parseFloat(total401kBalance) + parseFloat(totalIraBalance) + parseFloat(totalCdBalance);
+    const brokerageData = await Brokerage.findAll({
+      where: {
+        user_id: req.session.user_id,
+      },
+      order: [['balance', 'DESC']],
+      include: [
+        {
+          model: User,
+          attributes: ['username'],
+        },
+      ],
+    });
+
+    const brokerages = brokerageData.map((brokerage) => brokerage.get({ plain: true }));
+
+    let totalBrokerageBalance = 0;
+    for (let i = 0; i < brokerages.length; i++) {
+      totalBrokerageBalance += parseFloat(brokerages[i].balance);
+    }
+    totalBrokerageBalance = totalBrokerageBalance.toFixed(2);
+
+    totalAssets = parseFloat(totalBankBalance) + parseFloat(total401kBalance) + parseFloat(totalIraBalance) + parseFloat(totalCdBalance) + parseFloat(totalBrokerageBalance);
     totalAssets = totalAssets.toFixed(2);
 
     totalDebt = parseFloat(totalMortgageBalance) + parseFloat(totalCarBalance) + parseFloat(totalLoanBalance) + parseFloat(totalBalance);
@@ -245,6 +266,7 @@ router.get('/', async (req, res) => {
       retirements,
       iras,
       cds,
+      brokerages,
       totalBankBalance,
       totalMortgageAmount,
       totalMortgageAverageInterest,
@@ -271,6 +293,7 @@ router.get('/', async (req, res) => {
       total401kBalance,
       totalIraBalance,
       totalCdBalance,
+      totalBrokerageBalance,
       totalAssets,
       totalDebt,
       netWorth,
@@ -509,6 +532,34 @@ router.get('/cd/:id', async (req, res) => {
   }
 });
 
+// Getbrokerage account by id
+router.get('/brokerage/:id', async (req, res) => {
+  try {
+    const brokerageData = await Brokerage.findByPk(req.params.id, {
+      include: [
+        {
+          model: User,
+          attributes: ['username'],
+        },
+      ],
+    });
+
+    if (!brokerageData) {
+      res.render('404');
+      return;
+    }
+
+    const brokerage = brokerageData.get({ plain: true });
+
+    res.render('brokerage', {
+      ...brokerage,
+      logged_in: req.session.logged_in
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 // Get bank accounts page by user_id
 router.get('/banks', withAuth, async (req, res) => {
   try {
@@ -692,6 +743,29 @@ router.get('/cds', withAuth, async (req, res) => {
   }
 });
 
+// Get brokerage accounts page by user_id
+router.get('/brokerages', withAuth, async (req, res) => {
+  try {
+    const userData = await User.findByPk(req.session.user_id, {
+      attributes: { exclude: ['password'] },
+      include: [{ model: Brokerage }],
+      order: [
+        [Brokerage, 'title', 'ASC']
+      ],
+    });
+
+    const user = userData.get({ plain: true });
+
+    res.render('brokerages', {
+      ...user,
+      logged_in: true
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
 // Log in if not already logged in
 router.get('/login', (req, res) => {
   if (req.session.logged_in) {
@@ -855,6 +929,25 @@ router.get('/add-cd', async (req, res) => {
     const user = userData.get({ plain: true });
 
     res.render('add-cd', {
+      ...user,
+      logged_in: true
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
+// New brokerage account creation page
+router.get('/add-brokerage', async (req, res) => {
+  try {
+    const userData = await User.findByPk(req.session.user_id, {
+    attributes: { exclude: ['password'] },
+    });
+
+    const user = userData.get({ plain: true });
+
+    res.render('add-brokerage', {
       ...user,
       logged_in: true
     });
@@ -1118,6 +1211,37 @@ router.get('/edit-cd/:id', async (req, res) => {
 
     res.render('edit-cd', {
       ...cd,
+      logged_in: req.session.logged_in
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+// Edit brokerage account page
+router.get('/edit-brokerage/:id', async (req, res) => {
+  try {
+    const editBrokerageData = await Brokerage.findByPk(req.params.id, {
+      attributes: [
+        'id',
+        'title',
+        'balance'
+      ],
+      include: [{
+        model: User,
+        attributes: ['username']
+      }]
+    });
+
+    if (!editBrokerageData) {
+      res.render('404');
+      return;
+    }
+
+    const brokerage = editBrokerageData.get({ plain: true });
+
+    res.render('edit-brokerage', {
+      ...brokerage,
       logged_in: req.session.logged_in
     });
   } catch (err) {
