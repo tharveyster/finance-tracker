@@ -49,10 +49,6 @@ This project is a finance tracker that allows users to create user accounts, and
 | - | - |
 | [<img src="./public/images/finance-tracker-home-page-blank.png" alt="Home page before accounts are added" width="600">](public/images/finance-tracker-home-page-blank.png) | [<img src="./public/images/finance-tracker-home-page.png" alt="Home page after accounts are added" width="600">](public/images/finance-tracker-home-page.png) |
 
-## Deployed
-
-A test version of this application has been deployed to Heroku at [this link](https://finance-tracker-8691.herokuapp.com/)
-
 ## Installation
 Clone this repository, go to the repository folder in the terminal, and then run the following command
 
@@ -85,7 +81,7 @@ npm start
 and open a browser window and go to http://localhost:3001/
 
 ## Questions
-If you have questions about this repo, open an issue or contact me directly at todd@theharveysplace.com. You can find more of my work at [tharveyster](https://github.com/tharveyster).
+If you have questions about this repo, open an issue or contact me directly at todd@weloveeats.com. You can find more of my work at [tharveyster](https://github.com/tharveyster).
 
 ## License
 ISC
